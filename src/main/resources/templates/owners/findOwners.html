@@ -4,31 +4,103 @@
 
 <body>
 
-  <h2 th:text="#{findOwners}">Find Owners</h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
 
-  <form th:object="${owner}" th:action="@{/owners}" method="get" class="form-horizontal" id="search-owner-form">
-    <div class="form-group">
-      <div class="control-group" id="lastNameGroup">
-        <label class="col-sm-2 control-label" th:text="#{lastName}">Last name </label>
-        <div class="col-sm-10">
-          <input class="form-control" th:field="*{lastName}" size="30" maxlength="80" />
-          <span class="help-inline">
-            <div th:if="${#fields.hasAnyErrors()}">
-              <p th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</p>
+      <!-- Header Section -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="fw-bold text-dark mb-1"><i class="fa fa-address-book text-primary me-2"></i>Patient &amp; Guardian Directory</h2>
+          <p class="text-muted small mb-0">Search registered veterinary patients, review medical histories, or register new guardians.</p>
+        </div>
+        <a class="btn btn-success rounded-pill px-4 shadow-sm fw-semibold" th:href="@{/owners/new}">
+          <i class="fa fa-user-plus me-1"></i> Register Patient
+        </a>
+      </div>
+
+      <!-- Main Search Card -->
+      <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+          <form th:object="${owner}" th:action="@{/owners}" method="get" id="search-owner-form">
+            <label class="form-label fw-bold text-secondary mb-2" th:text="#{lastName}">Search by Guardian Last Name</label>
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text bg-white text-muted border-end-0">
+                <i class="fa fa-search"></i>
+              </span>
+              <input class="form-control border-start-0" th:field="*{lastName}" id="lastName"
+                     placeholder="Type guardian last name (e.g. Franklin, Davis) or leave empty to list all..." maxlength="80" />
+              <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                <i class="fa fa-search me-1"></i> Search Directory
+              </button>
             </div>
-          </span>
+
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger py-2 small mb-3">
+              <p th:each="err : ${#fields.allErrors()}" th:text="${err}" class="mb-0">Error</p>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small">
+                <i class="fa fa-info-circle text-info me-1"></i> Leave search field blank to display all active clinical records.
+              </span>
+              <div class="d-flex gap-2 mt-2 mt-sm-0">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('lastName').value=''; document.getElementById('search-owner-form').submit();">
+                  <i class="fa fa-list me-1"></i> View All Patients (10+)
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" th:text="#{findOwner}">Find Owner</button>
+
+      <!-- Quick Access Patients Section -->
+      <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h6 class="fw-bold text-dark mb-0"><i class="fa fa-history text-muted me-2"></i>Frequently Accessed Patient Files</h6>
+        </div>
+        <div class="card-body p-3">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <a th:href="@{/owners/1}" class="card h-100 text-decoration-none border rounded-3 p-3 text-dark hover-shadow" style="transition: all 0.2s ease;">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <strong class="small">George Franklin</strong>
+                </div>
+                <div class="small text-muted mb-1"><i class="fa fa-map-marker me-1"></i> Madison</div>
+                <span class="badge bg-success bg-opacity-10 text-success small"><i class="fa fa-paw me-1"></i> Leo (Cat)</span>
+              </a>
+            </div>
+            <div class="col-md-4">
+              <a th:href="@{/owners/2}" class="card h-100 text-decoration-none border rounded-3 p-3 text-dark hover-shadow" style="transition: all 0.2s ease;">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <strong class="small">Betty Davis</strong>
+                </div>
+                <div class="small text-muted mb-1"><i class="fa fa-map-marker me-1"></i> Sun Prairie</div>
+                <span class="badge bg-success bg-opacity-10 text-success small"><i class="fa fa-paw me-1"></i> Basil (Hamster)</span>
+              </a>
+            </div>
+            <div class="col-md-4">
+              <a th:href="@{/owners/3}" class="card h-100 text-decoration-none border rounded-3 p-3 text-dark hover-shadow" style="transition: all 0.2s ease;">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="rounded-circle bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <strong class="small">Eduardo Rodriguez</strong>
+                </div>
+                <div class="small text-muted mb-1"><i class="fa fa-map-marker me-1"></i> McFarland</div>
+                <span class="badge bg-success bg-opacity-10 text-success small"><i class="fa fa-paw me-1"></i> Rosy, Jewel (Dogs)</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
-
-    <a class="btn btn-primary" th:href="@{/owners/new}" th:text="#{addOwner}">Add Owner</a>
-
-  </form>
+  </div>
 
 </body>
 

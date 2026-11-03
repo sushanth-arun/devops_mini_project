@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'error')}">
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
 
 <body>
-  <img src="../static/resources/images/pets.png" th:src="@{/resources/images/pets.png}" />
-  <!-- Title: Something happened -->
-  <h2 th:text="#{somethingHappened}">Something happened...</h2>
 
-  <!-- Status-specific error message -->
-  <p th:switch="${status}">
-    <span th:case="404" th:text="#{error.404}">The requested page was not found.</span>
-    <span th:case="500" th:text="#{error.500}">An internal server error occurred.</span>
-    <span th:case="*" th:text="#{error.general}">An unexpected error occurred.</span>
-  </p>
+  <div class="row justify-content-center py-5">
+    <div class="col-lg-6 text-center">
+      <div class="card border-0 shadow-sm rounded-4 p-5 bg-white">
+        <div class="mb-3 text-warning">
+          <i class="fa fa-exclamation-circle" style="font-size: 64px;"></i>
+        </div>
+        <h3 class="fw-bold text-dark mb-2" th:text="#{somethingHappened}">Service Notice</h3>
+        <p class="text-muted mb-4" th:switch="${status}">
+          <span th:case="404" th:text="#{error.404}">The requested clinical resource was not found.</span>
+          <span th:case="500" th:text="#{error.500}">A handled test exception occurred on this demo route.</span>
+          <span th:case="*" th:text="#{error.general}">An unexpected error was safely caught by the error handler.</span>
+        </p>
 
-  <!-- Exception message (for developers) -->
-  <p th:text="${message}">Exception message</p>
+        <div class="d-flex justify-content-center gap-3">
+          <a th:href="@{/}" class="btn btn-primary px-4 rounded-pill fw-semibold">
+            <i class="fa fa-home me-1"></i> Return to Dashboard
+          </a>
+          <a th:href="@{/owners/find}" class="btn btn-outline-secondary px-4 rounded-pill">
+            <i class="fa fa-search me-1"></i> Patient Directory
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>

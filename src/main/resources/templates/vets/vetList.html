@@ -19,8 +19,8 @@
           <tr>
             <th class="ps-4 py-3" th:text="#{name}" style="font-weight: 600;">Specialist Name</th>
             <th class="py-3" th:text="#{specialties}" style="font-weight: 600;">Clinical Department</th>
-            <th class="py-3" style="font-weight: 600;">Status</th>
-            <th class="pe-4 py-3 text-end" style="font-weight: 600;">Quick Action</th>
+            <th class="py-3" style="font-weight: 600;">Availability</th>
+            <th class="pe-4 py-3 text-end" style="font-weight: 600;">Consultation Booking</th>
           </tr>
         </thead>
         <tbody>
@@ -38,15 +38,19 @@
             </td>
             <td class="py-3">
               <span th:each="specialty : ${vet.specialties}" class="badge bg-info bg-opacity-10 text-info fw-semibold px-2 py-1 me-1" th:text="${#strings.toUpperCase(specialty.name)}"></span>
-              <span th:if="${vet.nrOfSpecialties == 0}" class="badge bg-secondary bg-opacity-10 text-secondary fw-semibold px-2 py-1">GENERAL PRACTICE</span>
+              <span th:if="${vet.nrOfSpecialties == 0}" class="badge bg-secondary bg-opacity-10 text-secondary fw-semibold px-2 py-1">GENERAL MEDICINE</span>
             </td>
             <td class="py-3">
               <span class="badge bg-success bg-opacity-10 text-success px-2 py-1"><i class="fa fa-circle me-1" style="font-size: 8px;"></i> Available Today</span>
             </td>
             <td class="pe-4 py-3 text-end">
-              <a th:href="@{/owners/find}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm"
+                      data-bs-toggle="modal" data-bs-target="#bookingModal"
+                      th:data-vet-name="${vet.firstName + ' ' + vet.lastName}"
+                      th:data-vet-specialty="${vet.nrOfSpecialties > 0 ? vet.specialties[0].name : 'General Care'}"
+                      onclick="prepareBooking(this.getAttribute('data-vet-name'), this.getAttribute('data-vet-specialty'))">
                 <i class="fa fa-calendar-check-o me-1"></i> Book Slot
-              </a>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -54,7 +58,7 @@
     </div>
   </div>
 
-  <div th:if="${totalPages > 1}" class="d-flex justify-content-center align-items-center gap-2 mt-3">
+  <div th:if="${totalPages > 1}" class="d-flex justify-content-center align-items-center gap-2 mt-3 mb-4">
     <span class="text-muted small me-2" th:text="#{pages}">Pages:</span>
     <span th:each="i: ${#numbers.sequence(1, totalPages)}">
       <a th:if="${currentPage != i}" th:href="@{'/vets.html?page=__${i}__'}" class="btn btn-sm btn-outline-secondary px-3">[[${i}]]</a>
@@ -65,6 +69,125 @@
     <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${currentPage + 1}__'}" th:title="#{next}" class="btn btn-sm btn-light fa fa-step-forward"></a>
     <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${totalPages}__'}" th:title="#{last}" class="btn btn-sm btn-light fa fa-fast-forward"></a>
   </div>
+
+  <!-- Interactive Appointment Booking Modal -->
+  <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-bottom py-3">
+          <h5 class="modal-title fw-bold" id="bookingModalLabel">
+            <i class="fa fa-calendar-plus-o text-primary me-2"></i>Schedule Appointment
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <!-- Doctor info banner -->
+          <div class="d-flex align-items-center p-3 rounded-3 bg-light mb-3">
+            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; font-size: 18px;">
+              <i class="fa fa-user-md"></i>
+            </div>
+            <div>
+              <div class="fw-bold" id="displayVetName">Dr. Specialist</div>
+              <span class="badge bg-primary text-white" id="displaySpecialty">Specialty</span>
+            </div>
+          </div>
+
+          <!-- Booking Alert Confirmation -->
+          <div id="bookingSuccessAlert" class="alert alert-success py-2 small" style="display: none;">
+            <i class="fa fa-check-circle me-1"></i>
+            <span id="bookingSuccessMsg">Slot successfully booked! Confirmation sent.</span>
+          </div>
+
+          <form id="bookingForm" onsubmit="event.preventDefault(); confirmBooking();">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Patient / Pet Name</label>
+              <input type="text" id="patientName" class="form-control" placeholder="e.g. Leo, Basil, Rosy" required />
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-muted">Preferred Date</label>
+                <input type="date" id="appointmentDate" class="form-control" required />
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-muted">Time Slot</label>
+                <select id="timeSlot" class="form-select">
+                  <option>09:30 AM (Morning)</option>
+                  <option selected>11:00 AM (Morning)</option>
+                  <option>02:30 PM (Afternoon)</option>
+                  <option>04:00 PM (Evening)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted d-block">Consultation Type</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="consultType" id="typeClinic" value="In-Clinic" checked />
+                <label class="form-check-label small" for="typeClinic">🏥 In-Clinic Visit</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="consultType" id="typeVirtual" value="Telehealth" />
+                <label class="form-check-label small" for="typeVirtual">💻 Virtual Telehealth</label>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-2 border-top">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary px-4 fw-semibold" id="confirmBtn">
+                <i class="fa fa-check me-1"></i> Confirm Appointment
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal Script -->
+  <script>
+    let activeDoctor = "";
+
+    function prepareBooking(vetName, specialty) {
+      activeDoctor = vetName;
+      document.getElementById('displayVetName').innerText = vetName;
+      document.getElementById('displaySpecialty').innerText = (specialty || 'General Care').toUpperCase();
+      document.getElementById('bookingSuccessAlert').style.display = 'none';
+      document.getElementById('patientName').value = '';
+
+      // Set tomorrow's date as default
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('appointmentDate').value = tomorrow.toISOString().split('T')[0];
+    }
+
+    function confirmBooking() {
+      const pet = document.getElementById('patientName').value.trim();
+      const date = document.getElementById('appointmentDate').value;
+      const slot = document.getElementById('timeSlot').value;
+      const type = document.querySelector('input[name="consultType"]:checked').value;
+
+      if (!pet) {
+        alert("Please enter the patient/pet name.");
+        return;
+      }
+
+      const alertBox = document.getElementById('bookingSuccessAlert');
+      const msg = document.getElementById('bookingSuccessMsg');
+
+      msg.innerHTML = `<strong>Appointment Confirmed!</strong> ${type} scheduled with <strong>${activeDoctor}</strong> for <strong>${pet}</strong> on ${date} at ${slot}. (Token: #MED-${Math.floor(1000 + Math.random() * 9000)})`;
+      alertBox.style.display = 'block';
+
+      // Auto close after 2.5 seconds
+      setTimeout(() => {
+        const modalEl = document.getElementById('bookingModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) {
+          modal.hide();
+        }
+      }, 2500);
+    }
+  </script>
 
 </body>
 
