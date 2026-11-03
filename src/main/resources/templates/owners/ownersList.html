@@ -4,58 +4,68 @@
 
 <body>
 
-  <h2 th:text="#{owners}">Owners</h2>
-
-  <table id="owners" class="table table-striped">
-    <thead>
-      <tr>
-        <th th:text="#{name}" style="width: 150px;">Name</th>
-        <th th:text="#{address}" style="width: 200px;">Address</th>
-        <th th:text="#{city}">City</th>
-        <th th:text="#{telephone}" style="width: 120px">Telephone</th>
-        <th th:text="#{pets}">Pets</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="owner : ${listOwners}">
-        <td>
-          <a th:href="@{/owners/__${owner.id}__}" th:text="${owner.firstName + ' ' + owner.lastName}" /></a>
-        </td>
-        <td th:text="${owner.address}" />
-        <td th:text="${owner.city}" />
-        <td th:text="${owner.telephone}" />
-        <td><span th:text="${#strings.listJoin(owner.pets, ', ')}" /></td>
-      </tr>
-    </tbody>
-  </table>
-  <div th:if="${totalPages > 1}">
-    <span th:text="#{pages}">Pages:</span>
-    <span>[</span>
-    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-      <a th:if="${currentPage != i}" th:href="@{'/owners?page=' + ${i}}">[[${i}]]</a>
-      <span th:unless="${currentPage != i}">[[${i}]]</span>
-    </span>
-    <span>]&nbsp;</span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/owners?page=1'}" th:title="#{first}" class="fa fa-fast-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{first}" class="fa fa-fast-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/owners?page=__${currentPage - 1}__'}" th:title="#{previous}"
-        class="fa fa-step-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{previous}" class="fa fa-step-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=__${currentPage + 1}__'}" th:title="#{next}"
-        class="fa fa-step-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{next}" class="fa fa-step-forward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=__${totalPages}__'}" th:title="#{last}"
-        class="fa fa-fast-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{last}" class="fa fa-fast-forward"></span>
-    </span>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa fa-users text-primary me-2"></i>Patient &amp; Owner Directory</h2>
+      <p class="text-muted small mb-0">Registered veterinary patients, medical histories, and associated guardian contacts.</p>
+    </div>
+    <a th:href="@{/owners/new}" class="btn btn-primary rounded-pill px-4 shadow-sm">
+      <i class="fa fa-user-plus me-1"></i> Register New Patient
+    </a>
   </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="table-responsive">
+      <table id="owners" class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4 py-3" th:text="#{name}" style="width: 220px; font-weight: 600;">Guardian Name</th>
+            <th class="py-3" th:text="#{address}" style="width: 250px; font-weight: 600;">Address</th>
+            <th class="py-3" th:text="#{city}" style="font-weight: 600;">City</th>
+            <th class="py-3" th:text="#{telephone}" style="width: 140px; font-weight: 600;">Contact</th>
+            <th class="pe-4 py-3" th:text="#{pets}" style="font-weight: 600;">Registered Pets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="owner : ${listOwners}">
+            <td class="ps-4 py-3">
+              <a class="fw-bold text-primary text-decoration-none d-flex align-items-center" th:href="@{/owners/__${owner.id}__}">
+                <div class="rounded-circle bg-light text-primary border d-flex align-items-center justify-content-center me-2" style="width: 34px; height: 34px;">
+                  <i class="fa fa-user"></i>
+                </div>
+                <span th:text="${owner.firstName + ' ' + owner.lastName}"></span>
+              </a>
+            </td>
+            <td class="py-3 text-muted small" th:text="${owner.address}"></td>
+            <td class="py-3">
+              <span class="badge bg-light text-dark border px-2 py-1" th:text="${owner.city}"></span>
+            </td>
+            <td class="py-3 text-muted small">
+              <i class="fa fa-phone text-muted me-1"></i><span th:text="${owner.telephone}"></span>
+            </td>
+            <td class="pe-4 py-3">
+              <span th:each="pet : ${owner.pets}" class="badge bg-success bg-opacity-10 text-success me-1 px-2 py-1">
+                <i class="fa fa-paw me-1"></i><span th:text="${pet}"></span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div th:if="${totalPages > 1}" class="d-flex justify-content-center align-items-center gap-2 mt-3">
+    <span class="text-muted small me-2" th:text="#{pages}">Pages:</span>
+    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${currentPage != i}" th:href="@{'/owners?page=' + ${i}}" class="btn btn-sm btn-outline-secondary px-3">[[${i}]]</a>
+      <span th:unless="${currentPage != i}" class="btn btn-sm btn-primary px-3">[[${i}]]</span>
+    </span>
+    <a th:if="${currentPage > 1}" th:href="@{'/owners?page=1'}" th:title="#{first}" class="btn btn-sm btn-light fa fa-fast-backward"></a>
+    <a th:if="${currentPage > 1}" th:href="@{'/owners?page=__${currentPage - 1}__'}" th:title="#{previous}" class="btn btn-sm btn-light fa fa-step-backward"></a>
+    <a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=__${currentPage + 1}__'}" th:title="#{next}" class="btn btn-sm btn-light fa fa-step-forward"></a>
+    <a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=__${totalPages}__'}" th:title="#{last}" class="btn btn-sm btn-light fa fa-fast-forward"></a>
+  </div>
+
 </body>
 
 </html>

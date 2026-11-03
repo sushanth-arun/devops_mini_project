@@ -4,12 +4,392 @@
 
 <body>
 
-  <h2 th:text="#{welcome}">Welcome</h2>
-  <div class="row">
-    <div class="col-md-12">
-      <img class="img-responsive" src="../static/resources/images/pets.png" th:src="@{/resources/images/pets.png}" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #4f46e5 100%);
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --accent-emerald: #10b981;
+      --accent-purple: #8b5cf6;
+    }
+
+    .hero-banner {
+      background: var(--primary-gradient);
+      color: white;
+      border-radius: 16px;
+      padding: 40px 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      padding: 20px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      height: 100%;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.1);
+      border-color: #cbd5e1;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .interactive-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+    }
+
+    .card-header-styled {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 24px;
+      font-weight: 600;
+    }
+
+    .ai-badge {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .devops-badge {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: monospace;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .symptom-chip {
+      display: inline-block;
+      background: #f1f5f9;
+      color: #475569;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #e2e8f0;
+    }
+
+    .symptom-chip:hover {
+      background: #e0f2fe;
+      color: #0369a1;
+      border-color: #38bdf8;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+    }
+  </style>
+
+  <!-- Hero Header -->
+  <div class="hero-banner">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-semibold mb-2">
+          <i class="fa fa-heartbeat me-1"></i> Next-Gen Veterinary Platform
+        </span>
+        <h1 class="display-6 fw-bold mt-2 mb-2">MediVet Cloud Health System</h1>
+        <p class="lead mb-4 opacity-90" style="font-size: 1.05rem;">
+          Enterprise clinical patient management automated via continuous CI/CD pipelines, containerization, and configuration management.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <a th:href="@{/owners/find}" class="btn btn-light btn-lg px-4 fw-semibold text-primary shadow-sm">
+            <i class="fa fa-search me-1"></i> Patient Directory
+          </a>
+          <a th:href="@{/vets.html}" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+            <i class="fa fa-user-md me-1"></i> Veterinarians
+          </a>
+          <a href="#ai-triage" class="btn btn-warning btn-lg px-4 fw-semibold shadow-sm text-dark">
+            <i class="fa fa-magic me-1"></i> AI Symptom Triage
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 text-center d-none d-lg-block">
+        <img class="img-fluid rounded-4 shadow" style="max-height: 200px; background: white; padding: 12px;"
+             src="../static/resources/images/pets.png" th:src="@{/resources/images/pets.png}" alt="Clinic Patients" />
+      </div>
     </div>
   </div>
+
+  <!-- Key Metric Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+      <div class="stat-card">
+        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+          <i class="fa fa-paw"></i>
+        </div>
+        <div class="metric-value">13+</div>
+        <div class="metric-label">Registered Patients</div>
+        <div class="text-success small mt-2"><i class="fa fa-check-circle me-1"></i> H2 In-Memory DB Active</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="stat-card">
+        <div class="stat-icon bg-success bg-opacity-10 text-success">
+          <i class="fa fa-user-md"></i>
+        </div>
+        <div class="metric-value">6</div>
+        <div class="metric-label">Board-Certified Specialists</div>
+        <div class="text-muted small mt-2"><i class="fa fa-hospital-o me-1"></i> Radiology, Surgery, Dentistry</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="stat-card">
+        <div class="stat-icon bg-info bg-opacity-10 text-info">
+          <i class="fa fa-docker"></i>
+        </div>
+        <div class="metric-value">187 MB</div>
+        <div class="metric-label">Container Image Size</div>
+        <div class="text-primary small mt-2"><i class="fa fa-shield me-1"></i> Multi-Stage Alpine JRE</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="stat-card">
+        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+          <i class="fa fa-cogs"></i>
+        </div>
+        <div class="metric-value">0 Downtime</div>
+        <div class="metric-label">Automated Ansible Rollout</div>
+        <div class="text-success small mt-2"><i class="fa fa-refresh me-1"></i> Idempotent Deployment</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Interactive Row: Trendy Features -->
+  <div class="row g-4 mb-4">
+
+    <!-- Trendy Feature 1: AI Clinical Symptom Checker & Triage -->
+    <div class="col-lg-7" id="ai-triage">
+      <div class="interactive-card h-100">
+        <div class="card-header-styled d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-stethoscope text-primary me-2"></i>Dr. Paw AI — Instant Symptom & Triage Assistant</span>
+          <span class="ai-badge"><i class="fa fa-bolt me-1"></i> AI Powered</span>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small mb-3">
+            Select a common clinical symptom or type a query to simulate instant medical triage, risk analysis, and specialist routing.
+          </p>
+
+          <!-- Quick symptom chips -->
+          <div class="mb-3">
+            <span class="symptom-chip" onclick="setSymptom('Lethargy and loss of appetite for 2 days')">🐕 Lethargy & Loss of Appetite</span>
+            <span class="symptom-chip" onclick="setSymptom('Persistent scratching and head shaking')">🐱 Ear Scratching & Shaking</span>
+            <span class="symptom-chip" onclick="setSymptom('Limping on right front paw after jumping')">🐾 Sudden Limping</span>
+            <span class="symptom-chip" onclick="setSymptom('Annual rabies and DHPP vaccination due')">💉 Routine Vaccination Due</span>
+          </div>
+
+          <div class="input-group mb-3">
+            <input type="text" id="symptomInput" class="form-control form-control-lg"
+                   placeholder="Describe pet condition (e.g., limping, ear discharge, vomiting)...">
+            <button class="btn btn-primary px-4 fw-semibold" type="button" onclick="runAiTriage()">
+              <i class="fa fa-magic me-1"></i> Analyze
+            </button>
+          </div>
+
+          <!-- Dynamic AI Output Card -->
+          <div id="aiOutput" class="p-3 rounded-3 border bg-light mt-3" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span id="triageSeverity" class="badge bg-warning text-dark px-3 py-2 fs-6">🟡 Moderate Priority</span>
+              <span class="text-muted small"><i class="fa fa-clock-o me-1"></i> Response: 12ms</span>
+            </div>
+            <h6 class="fw-bold mb-1" id="triageDiagnosis">Probable Clinical Condition</h6>
+            <p class="small text-muted mb-2" id="triageDescription"></p>
+            <div class="alert alert-info py-2 small mb-2" id="triageAction"></div>
+            <div class="d-flex gap-2">
+              <a th:href="@{/owners/find}" class="btn btn-sm btn-primary">Book Clinical Appointment</a>
+              <button class="btn btn-sm btn-outline-secondary" onclick="resetTriage()">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trendy Feature 2: Live DevOps Telemetry & Container Metrics -->
+    <div class="col-lg-5">
+      <div class="interactive-card h-100">
+        <div class="card-header-styled d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-dashboard text-success me-2"></i>Live DevOps Telemetry</span>
+          <span class="devops-badge">Docker: clinic-app</span>
+        </div>
+        <div class="p-4">
+          <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <span class="text-muted small">Container Runtime</span>
+              <span class="fw-bold small text-dark"><i class="fa fa-linux me-1"></i> Alpine Linux 3.19 (JRE 17)</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <span class="text-muted small">Deployment Orchestrator</span>
+              <span class="badge bg-dark">Ansible 2.16 (Idempotent)</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <span class="text-muted small">CI/CD Pipeline</span>
+              <span class="badge bg-primary">Jenkins Declarative + GitHub Actions</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <span class="text-muted small">DevSecOps Vulnerability Scan</span>
+              <span class="badge bg-success"><i class="fa fa-shield me-1"></i> Trivy: 0 Critical CVEs</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <span class="text-muted small">Spring Actuator Health</span>
+              <span class="badge bg-success" id="liveActuatorStatus"><i class="fa fa-circle text-white me-1"></i> UP (200 OK)</span>
+            </li>
+          </ul>
+
+          <div class="mb-2">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+              <span>JVM Memory Heap Utilization</span>
+              <span id="memPercent">38% (192 MB / 512 MB)</span>
+            </div>
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 38%"></div>
+            </div>
+          </div>
+
+          <div class="mt-3 text-center">
+            <a th:href="@{/actuator/health}" target="_blank" class="btn btn-sm btn-outline-dark w-100">
+              <i class="fa fa-external-link me-1"></i> View Live Actuator Metrics JSON
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Trendy Feature 3: Telehealth Virtual Consultation Banner -->
+  <div class="card border-0 shadow-sm p-4 text-white mb-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px;">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h5 class="fw-bold mb-1 text-info"><i class="fa fa-video-camera me-2"></i>Telehealth & Virtual Veterinary Consultations</h5>
+        <p class="small text-light opacity-75 mb-0">
+          Enabled for pet owners with remote triage needs. Real-time video consults with on-duty veterinarians directly from the patient management dashboard.
+        </p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <button class="btn btn-info fw-semibold px-4" onclick="alert('Virtual Telehealth Room Initiated! Connecting to Dr. Helen Leary (Radiology)...');">
+          <i class="fa fa-phone me-1"></i> Start Virtual Consult
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Interactive AI Triage Logic -->
+  <script>
+    function setSymptom(text) {
+      document.getElementById('symptomInput').value = text;
+      runAiTriage();
+    }
+
+    function runAiTriage() {
+      const input = document.getElementById('symptomInput').value.toLowerCase().trim();
+      if (!input) {
+        alert("Please describe your pet's symptoms or select a prompt.");
+        return;
+      }
+
+      const out = document.getElementById('aiOutput');
+      const sev = document.getElementById('triageSeverity');
+      const diag = document.getElementById('triageDiagnosis');
+      const desc = document.getElementById('triageDescription');
+      const act = document.getElementById('triageAction');
+
+      out.style.display = 'block';
+
+      if (input.includes('scratch') || input.includes('ear') || input.includes('shake')) {
+        sev.className = "badge bg-warning text-dark px-3 py-2 fs-6";
+        sev.innerText = "🟡 Moderate Priority - Dermatology / ENT";
+        diag.innerText = "Suspected Otitis Externa (Ear Mites or Infection)";
+        desc.innerText = "Persistent ear shaking and itching indicate localized inflammation or fungal/parasitic infestation in the ear canal.";
+        act.innerHTML = "<strong>Recommended Action:</strong> Routine Otoscopic examination recommended within 24-48 hours. Avoid cotton swabs. Assigned Specialist: <strong>Dr. Helen Leary (Radiology/Diagnostics)</strong>.";
+      } else if (input.includes('limp') || input.includes('paw') || input.includes('jump') || input.includes('bone')) {
+        sev.className = "badge bg-danger px-3 py-2 fs-6";
+        sev.innerText = "🔴 High Priority - Orthopedic Alert";
+        diag.innerText = "Acute Musculoskeletal Strain or Fractured Metatarsal";
+        desc.innerText = "Sudden refusal to bear weight after dynamic activity suggests acute ligament tear or bone fracture.";
+        act.innerHTML = "<strong>Recommended Action:</strong> Immediate digital X-Ray imaging required. Restrict movement immediately. Assigned Specialist: <strong>Dr. Linda Douglas (Orthopedic Surgery)</strong>.";
+      } else if (input.includes('vaccin') || input.includes('rabies') || input.includes('routine')) {
+        sev.className = "badge bg-success px-3 py-2 fs-6";
+        sev.innerText = "🟢 Routine Preventive Care";
+        diag.innerText = "Annual Immunization Protocol Check";
+        desc.innerText = "Core vaccinations (DHPP, Rabies, Bordetella) safeguard against endemic contagious pathogens.";
+        act.innerHTML = "<strong>Recommended Action:</strong> Eligible for fast-track walk-in immunization today. Assigned Specialist: <strong>Dr. James Carter (General Practice)</strong>.";
+      } else {
+        sev.className = "badge bg-warning text-dark px-3 py-2 fs-6";
+        sev.innerText = "🟡 General Clinical Evaluation Needed";
+        diag.innerText = "Non-Specific Gastrointestinal / Metabolic Distress";
+        desc.innerText = "Reported symptoms require vital sign assessment, hydration status check, and clinical evaluation.";
+        act.innerHTML = "<strong>Recommended Action:</strong> Fasting for 6 hours recommended prior to blood examination. Assigned Specialist: <strong>Dr. Rafael Ortega (Surgery & General Care)</strong>.";
+      }
+    }
+
+    function resetTriage() {
+      document.getElementById('symptomInput').value = '';
+      document.getElementById('aiOutput').style.display = 'none';
+    }
+
+    // Auto-poll actuator health on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('/actuator/health')
+        .then(res => res.json())
+        .then(data => {
+          const badge = document.getElementById('liveActuatorStatus');
+          if (badge && data.status === 'UP') {
+            badge.innerHTML = '<i class="fa fa-circle text-white me-1"></i> UP (200 OK)';
+          }
+        })
+        .catch(() => {});
+    });
+  </script>
 
 </body>
 

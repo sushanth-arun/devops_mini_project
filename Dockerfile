@@ -24,10 +24,9 @@ RUN ./mvnw clean package -DskipTests
 # Stage 2: Minimal Runtime Environment (eclipse-temurin:17-jre-alpine)
 # ==============================================================================
 FROM eclipse-temurin:17-jre-alpine
-LABEL maintainer="PSG iTech - DevOps Mini-Project Team" \
+LABEL maintainer="DevOps Team <sushantharun2006@gmail.com>" \
       project="Healthcare Clinic Management System" \
-      course="Anna University 5th Sem - DevOps Lab" \
-      version="1.0.0"
+      version="4.1.0"
 
 WORKDIR /app
 

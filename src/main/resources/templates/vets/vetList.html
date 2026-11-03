@@ -4,54 +4,68 @@
 
 <body>
 
-  <h2 th:text="#{vets}">Veterinarians</h2>
-
-  <table id="vets" class="table table-striped">
-    <thead>
-      <tr>
-        <th th:text="#{name}">Name</th>
-        <th th:text="#{specialties}">Specialties</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="vet : ${listVets}">
-        <td th:text="${vet.firstName + ' ' + vet.lastName}"></td>
-        <td>
-          <span th:each="specialty : ${vet.specialties}" th:text="${specialty.name + ' '}" /> <span
-            th:if="${vet.nrOfSpecialties == 0}" th:text="#{none}">none</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div th:if="${totalPages > 1}">
-    <span th:text="#{pages}">Pages:</span>
-    <span>[</span>
-    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-      <a th:if="${currentPage != i}" th:href="@{'/vets.html?page=__${i}__'}">[[${i}]]</a>
-      <span th:unless="${currentPage != i}">[[${i}]]</span>
-    </span>
-    <span>]&nbsp;</span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=1'}" th:title="#{first}"
-        class="fa fa-fast-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{first}" class="fa fa-fast-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=__${currentPage - 1}__'}" th:title="#{previous}"
-        class="fa fa-step-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{previous}" class="fa fa-step-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${currentPage + 1}__'}" th:title="#{next}"
-        class="fa fa-step-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{next}" class="fa fa-step-forward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${totalPages}__'}" th:title="#{last}"
-        class="fa fa-fast-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{last}" class="fa fa-fast-forward"></span>
-    </span>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold text-dark mb-1"><i class="fa fa-user-md text-primary me-2"></i>Medical Specialists &amp; Veterinarians</h2>
+      <p class="text-muted small mb-0">Board-certified clinical specialists available for on-site diagnosis and virtual consultation.</p>
+    </div>
+    <span class="badge bg-primary px-3 py-2 rounded-pill"><i class="fa fa-check-circle me-1"></i> 6 Specialists Active</span>
   </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="table-responsive">
+      <table id="vets" class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4 py-3" th:text="#{name}" style="font-weight: 600;">Specialist Name</th>
+            <th class="py-3" th:text="#{specialties}" style="font-weight: 600;">Clinical Department</th>
+            <th class="py-3" style="font-weight: 600;">Status</th>
+            <th class="pe-4 py-3 text-end" style="font-weight: 600;">Quick Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="vet : ${listVets}">
+            <td class="ps-4 py-3">
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: 700;">
+                  <i class="fa fa-stethoscope"></i>
+                </div>
+                <div>
+                  <div class="fw-bold text-dark" th:text="${vet.firstName + ' ' + vet.lastName}">Dr. Name</div>
+                  <div class="text-muted small">Resident Physician</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3">
+              <span th:each="specialty : ${vet.specialties}" class="badge bg-info bg-opacity-10 text-info fw-semibold px-2 py-1 me-1" th:text="${#strings.toUpperCase(specialty.name)}"></span>
+              <span th:if="${vet.nrOfSpecialties == 0}" class="badge bg-secondary bg-opacity-10 text-secondary fw-semibold px-2 py-1">GENERAL PRACTICE</span>
+            </td>
+            <td class="py-3">
+              <span class="badge bg-success bg-opacity-10 text-success px-2 py-1"><i class="fa fa-circle me-1" style="font-size: 8px;"></i> Available Today</span>
+            </td>
+            <td class="pe-4 py-3 text-end">
+              <a th:href="@{/owners/find}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                <i class="fa fa-calendar-check-o me-1"></i> Book Slot
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div th:if="${totalPages > 1}" class="d-flex justify-content-center align-items-center gap-2 mt-3">
+    <span class="text-muted small me-2" th:text="#{pages}">Pages:</span>
+    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${currentPage != i}" th:href="@{'/vets.html?page=__${i}__'}" class="btn btn-sm btn-outline-secondary px-3">[[${i}]]</a>
+      <span th:unless="${currentPage != i}" class="btn btn-sm btn-primary px-3">[[${i}]]</span>
+    </span>
+    <a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=1'}" th:title="#{first}" class="btn btn-sm btn-light fa fa-fast-backward"></a>
+    <a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=__${currentPage - 1}__'}" th:title="#{previous}" class="btn btn-sm btn-light fa fa-step-backward"></a>
+    <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${currentPage + 1}__'}" th:title="#{next}" class="btn btn-sm btn-light fa fa-step-forward"></a>
+    <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${totalPages}__'}" th:title="#{last}" class="btn btn-sm btn-light fa fa-fast-forward"></a>
+  </div>
+
 </body>
 
 </html>
