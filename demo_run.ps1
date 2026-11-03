@@ -68,7 +68,7 @@ if ($Stop) {
     exit 0
 }
 
-Write-Header "PSG iTech - DevOps Mini-Project Live Demo"
+Write-Header "DevOps Healthcare Clinic Pipeline - Live Demo"
 Write-Host " Project: Automated CI/CD & Configuration Management for Clinic System" -ForegroundColor White
 Write-Host " Stack  : Git -> Maven -> Jenkins -> Docker -> Trivy -> Ansible" -ForegroundColor White
 

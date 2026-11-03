@@ -6,7 +6,6 @@
 [![DevSecOps](https://img.shields.io/badge/security-trivy%20scanned-brightgreen.svg?logo=aquasec)](https://trivy.dev/)
 [![Java](https://img.shields.io/badge/java-17%20(Eclipse%20Temurin)-orange.svg?logo=openjdk)](https://adoptium.net/)
 [![Spring Boot](https://img.shields.io/badge/spring%20boot-4.1.0-green.svg?logo=springboot)](https://spring.io/projects/spring-boot)
-[![Institution](https://img.shields.io/badge/PSG%20iTech-Anna%20Univ%205th%20Sem-darkblue.svg)](https://www.psgitech.ac.in/)
 
 ---
 
@@ -97,7 +96,7 @@ flowchart TD
 ├── inventory.ini              # Ansible inventory pointing to deployment targets
 ├── deploy.yml                 # Ansible idempotent deployment & healthcheck playbook
 ├── demo_run.ps1               # One-click PowerShell automated verification script
-├── REVIEW_GUIDE.md            # Detailed PSG iTech / Anna University review guide
+├── REVIEW_GUIDE.md            # Detailed DevOps pipeline and execution guide
 ├── pom.xml                    # Maven Project Object Model & dependencies
 └── README.md                  # Project portfolio documentation (this file)
 ```
@@ -177,14 +176,3 @@ Once deployed, the healthcare management system is active at:
 3. **Automated Trivy Scanning:** Continuous vulnerability auditing in both Jenkins (`Jenkinsfile`) and GitHub Actions (`ci-cd.yml`).
 4. **Deterministic Layer Caching:** Dependencies and Maven Wrapper are cached in early layers, guaranteeing rapid and reproducible builds.
 5. **Graceful Signal Handling:** Uses `exec java $JAVA_OPTS -jar app.jar` in `ENTRYPOINT` to ensure `SIGTERM` signals reach the JVM for clean database connection drain.
-
----
-
-## 🎓 Academic Review Information
-
-- **Institution:** PSG Institute of Technology and Applied Research (PSG iTech), Neelambur, Coimbatore
-- **Affiliated To:** Anna University, Chennai
-- **Department:** Computer Science and Engineering / Information Technology
-- **Course:** 5th Semester — DevOps Laboratory Mini-Project
-- **Repository:** [https://github.com/sushanth-arun/devops_mini_project](https://github.com/sushanth-arun/devops_mini_project)
-- **Detailed Viva Q&A Guide:** Refer to [`REVIEW_GUIDE.md`](./REVIEW_GUIDE.md) for top 5 viva questions and answers.
