@@ -27,3 +27,4 @@ echo -e "\n\033[1;32m===========================================================
 echo -e "\033[1;32m  🎉 DEMO PIPELINE COMPLETE! APPLICATION IS LIVE & HEALTHY!         \033[0m"
 echo -e "\033[1;37m  👉 Open in Chrome: http://localhost:8080                         \033[0m"
 echo -e "\033[1;32m====================================================================\033[0m\n"
+
