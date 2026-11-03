@@ -1,0 +1,42 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+.gitpod.yml
+
+# Maven build artifacts and cache
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE and Editor configuration
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# Gradle remnants
+gradle/
+gradlew
+gradlew.bat
+build.gradle
+settings.gradle
+
+# CI/CD and Container configs not needed in image
+Dockerfile
+.dockerignore
+Jenkinsfile
+inventory.ini
+deploy.yml
+demo_run.ps1
+REVIEW_GUIDE.md
+k8s/
+.devcontainer/
+.github/
+
+# Logs and temporary files
+*.log
+*.tmp
